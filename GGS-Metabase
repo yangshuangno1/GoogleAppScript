@@ -1,0 +1,24 @@
+function getId() {
+    var ss = SpreadsheetApp.openById("1L_eisktSM0cXZ15YCdUDCyyeFAv4Bv8CDXJWuK_u_Vo");
+    var sheet = ss.getSheetByName("Sheet1");
+    var id = sheet.getRange("B1").getValue();
+    return(id);
+}
+
+function doPost() {
+ var sheet = SpreadsheetApp.getActive().getSheetByName('Sheet1');
+var config = {
+    'Content-Type': 'application/json',
+    'X-Metabase-Session': getId(), 
+};
+var axiosOptions = {
+    'method': 'POST',
+    'headers': config
+    
+};
+  var response = UrlFetchApp.fetch('http://35.198.227.133:3000/api/card/49/query/csv',axiosOptions);
+  var responseData = response.getContentText()
+  var data = Utilities.parseCsv(responseData)
+  sheet.getRange(1, 1, data.length, data[0].length).setValues(data)
+  //Logger.log(responseData)
+}
