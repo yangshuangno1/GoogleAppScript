@@ -1,0 +1,125 @@
+function doGet(e) {
+  return handleResponse(e);
+}
+
+
+var SHEET_NAME = "DATA HNO";
+var SCRIPT_PROP = PropertiesService.getScriptProperties();
+
+function handleResponse(e) {
+  var lock = LockService.getPublicLock();
+  lock.waitLock(30000);
+  try {
+    // var doc = SpreadsheetApp.openById(SCRIPT_PROP.getProperty("key"));
+    var doc = SpreadsheetApp.openById('14s7vkcnWte5I974EXogLCCblwHHUgO1D6tRgkujHq8A');
+    var sheet = doc.getSheetByName(SHEET_NAME);
+
+    var row = 2;
+    var column = 1;
+    var numRows = sheet.getMaxRows();
+    var numColumns = 13;
+
+    // var values = sheet.getRange(row, column, numRows, numColumns).getValues();
+    var values = sheet.getRange(row, column, numRows, numColumns).getValues()
+    var ngaylam = [];
+    for (var row in values) {
+      if (values[row][0]) {
+        ngaylam.push(values[row][0]);
+      }
+    }
+    var phongban = [];
+    for (var row in values) {
+      if (values[row][1]) {
+        phongban.push(values[row][1]);
+      }
+    }
+    var makho = [];
+    for (var row in values) {
+      if (values[row][2]) {
+        makho.push(values[row][2]);
+      }
+    }
+    var chinhanh = [];
+    for (var row in values) {
+      if (values[row][3]) {
+        chinhanh.push(values[row][3]);
+      }
+    }
+    var congviec = [];
+    for (var row in values) {
+      if (values[row][4]) {
+        congviec.push(values[row][4]);
+      }
+    }
+    var phanloaifl = [];
+    for (var row in values) {
+      if (values[row][5]) {
+        phanloaifl.push(values[row][5]);
+      }
+    }
+    var phanloaica = [];
+    for (var row in values) {
+      if (values[row][6]) {
+        phanloaica.push(values[row][6]);
+      }
+    }
+    var giovaoca = [];
+    for (var row in values) {
+      if (values[row][7]) {
+        giovaoca.push(values[row][7]);
+      }
+    }
+    var gioraca = [];
+    for (var row in values) {
+      if (values[row][8]) {
+        giovaoca.push(values[row][8]);
+      }
+    }
+    var yeucau = [];
+    for (var row in values) {
+      if (values[row][9]) {
+        yeucau.push(values[row][9]);
+      }
+    }
+    var ezjob = [];
+    for (var row in values) {
+      if (values[row][10]) {
+        ezjob.push(values[row][10]);
+      }
+    }
+    var thucte = [];
+    for (var row in values) {
+      if (values[row][11]) {
+        thucte.push(values[row][11]);
+      }
+    }
+    var content = {
+      "ngaylam": ngaylam,
+      "phongban": phongban,
+      "makho": makho,
+      "chinhanh": chinhanh,
+      "congviec": congviec,
+      "phanloaifl": phanloaifl,
+      "phanloaica": phanloaica,
+      "giovaoca": giovaoca,
+      "gioraca": gioraca,
+      "yeucau": yeucau,
+      "ezjob": ezjob,
+      "thucte": thucte,
+    };
+    return ContentService
+      .createTextOutput(JSON.stringify({ "result": "success", "content": content }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (e) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ "result": "error", "error": e }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function setup() {
+  var doc = SpreadsheetApp.getActiveSpreadsheet();
+  SCRIPT_PROP.setProperty("key", doc.getId());
+}
